@@ -45,16 +45,16 @@ Discord - Tuesdays 12pm-x:xx. Additional meetings will be agreed upon. For TA me
 
 ### Wireframes:
 ## Login:
-<Image src="C:\Users\cocon\Downloads\login.JPG" alt="LoginPage" width={500} height={300} />
+<Image src="login.JPG" alt="LoginPage" width={500} height={300} />
 
 ## Register:
-<Image src="C:\Users\cocon\Downloads\register.JPG" alt="RegisterPage" width={500} height={300} />
+<Image src="register.JPG" alt="RegisterPage" width={500} height={300} />
 
 ## Upload:
-<Image src="/path/to/image.jpg" alt="Image Description" width={500} height={300} />
+<Image src="upload.jpg" alt="UploadPage" width={500} height={300} />
 
 ## Home:
-<Image src="/path/to/image.jpg" alt="Image Description" width={500} height={300} />
+<Image src="home.jpg" alt="HomePage" width={500} height={300} />
 
 
 
