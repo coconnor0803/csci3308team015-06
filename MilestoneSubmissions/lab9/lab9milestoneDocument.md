@@ -50,10 +50,10 @@ Discord - Tuesdays 12pm-x:xx. Additional meetings will be agreed upon. For TA me
 ## Register:
 <Image src="register.JPG" alt="RegisterPage" width={500} height={300} />
 
-## Upload:
+## Home:
 <Image src="upload.JPG" alt="UploadPage" width={500} height={300} />
 
-## Home:
+## Create:
 <Image src="home.JPG" alt="HomePage" width={500} height={300} />
 
 
