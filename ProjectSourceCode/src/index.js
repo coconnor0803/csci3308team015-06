@@ -130,7 +130,14 @@ app.post('/login', async (req, res) => {
 
 app.get('/home', (req, res) => {
   res.render('pages/home');
-})
+});
+
+
+//logout route
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('pages/logout');
+});
 
 // Authentication Middleware.
 const auth = (req, res, next) => {
