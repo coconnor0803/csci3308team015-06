@@ -128,6 +128,12 @@ app.post('/login', async (req, res) => {
   }
 });
 
+//logout route
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.render('pages/logout');
+});
+
 // Authentication Middleware.
 const auth = (req, res, next) => {
   if (!req.session.user) {
