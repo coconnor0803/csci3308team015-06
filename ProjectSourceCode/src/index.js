@@ -24,6 +24,26 @@ const hbs = handlebars.create({
   partialsDir: __dirname + '/views/partials',
 });
 
+const dbConfig = {
+  host: 'db', // the database server
+  port: 5432, // the database port
+  database: process.env.POSTGRES_DB, // the database name
+  user: process.env.POSTGRES_USER, // the user account to connect with
+  password: process.env.POSTGRES_PASSWORD, // the password of the user account
+};
+
+const db = pgp(dbConfig);
+
+// test your database
+db.connect()
+  .then(obj => {
+    console.log('Database connection successful'); // you can view this message in the docker compose logs
+    obj.done(); // success, release the connection;
+  })
+  .catch(error => {
+    console.log('ERROR:', error.message || error);
+  });
+
 // *****************************************************
 // <!-- Section 3 : App Settings -->
 // *****************************************************
@@ -58,14 +78,66 @@ app.get('/', (req, res) => {
     res.redirect('/login');
 });
 
+app.get('/register', (req, res) => {
+  res.render('pages/register');
+});
+
+app.post('/register', async (req, res) => {
+  try{
+    //hash the password using bcrypt library
+    const hash = await bcrypt.hash(req.body.password, 10);
+    const username = req.body.username;
+    const insert = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+    const values = [username, hash];
+
+    await db.none(insert, values);
+
+    res.redirect('/login');
+  } catch (error) {
+    console.error('Error during registration:', error);
+    res.redirect('/register');  }    
+});
+
 app.get('/login', (req, res) => {
   res.render('pages/login');
 })
 
-//lab 11 API
+app.post('/login', async (req, res) => {
+  try {
+      const username = req.body.username;
+      const password = req.body.password;
+      const user = await db.oneOrNone('SELECT * FROM users WHERE username = $1', username);
+      if (!user) {
+          return res.redirect('/register');
+      }
+      const match = await bcrypt.compare(password, user.password);
+      if (!match) {
+          return res.render('pages/login', { error: 'Incorrect username or password.' });
+      }
+      req.session.user = user;
+      req.session.save();
+      res.redirect('/discover');
+  } catch (error) {
+      console.error('Error during login:', error);
+      res.render('pages/login', { error: 'An error occurred. Please try again.' });
+  }
+});
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+  if (!req.session.user) {
+    // Default to login page.
+    return res.redirect('/login');
+  }
+  next();
+};
+
+/*
+lab 11 API
 app.get('/welcome', (req, res) => {
   res.join({status: 'success', message: 'Welcome!'});
 })
+*/
 
 
 // *****************************************************
@@ -75,6 +147,8 @@ app.get('/welcome', (req, res) => {
 //lab 11 change
 //app.listen(3000);
 //to
+app.use(auth);
+
 module.exports = app.listen(3000);
 
 console.log('Server is listening on port 3000');
