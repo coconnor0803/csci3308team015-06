@@ -3,6 +3,7 @@ CREATE TABLE users (
     password CHAR(60) NOT NULL
 );
 
+/*
 CREATE TABLE study_sets (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
@@ -15,3 +16,4 @@ CREATE TABLE terms (
     definition TEXT NOT NULL,
     study_set_id INTEGER REFERENCES study_sets(id) ON DELETE CASCADE
 );
+*/
