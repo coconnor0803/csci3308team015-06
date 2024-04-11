@@ -121,12 +121,16 @@ app.post('/login', async (req, res) => {
       }
       req.session.user = user;
       req.session.save();
-      //res.redirect('/discover');
+      res.redirect('/home');
   } catch (error) {
       console.error('Error during login:', error);
       res.render('pages/login', { error: 'An error occurred. Please try again.' });
   }
 });
+
+app.get('/home', (req, res) => {
+  res.render('pages/home');
+})
 
 // Authentication Middleware.
 const auth = (req, res, next) => {
