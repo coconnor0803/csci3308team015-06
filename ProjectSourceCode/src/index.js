@@ -78,6 +78,11 @@ app.get('/', (req, res) => {
     res.redirect('/login');
 });
 
+// test API route
+app.get('/welcome', (req, res) => {
+  res.json({status: 'success', message: 'Welcome!'});
+});
+
 app.get('/register', (req, res) => {
   res.render('pages/register');
 });
