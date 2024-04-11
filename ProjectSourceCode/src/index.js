@@ -121,18 +121,24 @@ app.post('/login', async (req, res) => {
       }
       req.session.user = user;
       req.session.save();
-      //res.redirect('/discover');
+      res.redirect('/home');
   } catch (error) {
       console.error('Error during login:', error);
       res.render('pages/login', { error: 'An error occurred. Please try again.' });
   }
 });
 
+app.get('/home', (req, res) => {
+  res.render('pages/home');
+});
+
+
 //logout route
 app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('pages/logout');
 });
+
 
 // Authentication Middleware.
 const auth = (req, res, next) => {
