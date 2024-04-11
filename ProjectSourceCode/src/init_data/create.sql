@@ -1,13 +1,12 @@
 CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL
+    username VARCHAR(50) PRIMARY KEY,
+    password CHAR(60) NOT NULL
 );
 
 CREATE TABLE study_sets (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    user_username VARCHAR(50) REFERENCES users(username) ON DELETE CASCADE
 );
 
 CREATE TABLE terms (
