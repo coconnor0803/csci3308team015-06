@@ -105,7 +105,7 @@ app.post('/register', async (req, res) => {
 
 app.get('/login', (req, res) => {
   res.render('pages/login');
-})
+});
 
 app.post('/login', async (req, res) => {
   try {
@@ -158,7 +158,7 @@ const auth = (req, res, next) => {
 //to
 app.use(auth);
 
-module.exports = app.listen(3000);
+app.listen(3000);
 
 console.log('Server is listening on port 3000');
 
