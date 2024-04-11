@@ -1,52 +1,72 @@
-// src/index.js
+// *****************************************************
+// <!-- Section 1 : Import Dependencies -->
+// *****************************************************
 
-const express = require('express');
-const session = require('express-session');
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
-
+const express = require('express'); // To build an application server or API
 const app = express();
+const handlebars = require('express-handlebars');
+const Handlebars = require('handlebars');
+const path = require('path');
+const pgp = require('pg-promise')(); // To connect to the Postgres DB from the node server
+const bodyParser = require('body-parser');
+const session = require('express-session'); // To set the session object. To store or access session data, use the `req.session`, which is (generally) serialized as JSON by the store.
+const bcrypt = require('bcrypt'); //  To hash passwords
+const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 
-// Configure session
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true
-}));
+// *****************************************************
+// <!-- Section 2 : Connect to DB -->
+// *****************************************************
 
-// Initialize passport
-app.use(passport.initialize());
-app.use(passport.session());
+// create `ExpressHandlebars` instance and configure the layouts and partials dir.
+const hbs = handlebars.create({
+  extname: 'hbs',
+  layoutsDir: __dirname + '/views/layouts',
+  partialsDir: __dirname + '/views/partials',
+});
 
-// Configure Google OAuth strategy
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: process.env.GOOGLE_CALLBACK_URL
-}, (accessToken, refreshToken, profile, done) => {
-  // Implement user authentication logic here
-}));
+// *****************************************************
+// <!-- Section 3 : App Settings -->
+// *****************************************************
 
-// Define routes
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] }));
+// Register `hbs` as our view engine using its bound `engine()` function.
+app.engine('hbs', hbs.engine);
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(bodyParser.json()); // specify the usage of JSON for parsing request body.
 
-app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  (req, res) => {
-    // Successful authentication, redirect home.
-    res.redirect('/');
-  });
+// initialize session variables
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    saveUninitialized: false,
+    resave: false,
+  })
+);
+
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
+// *****************************************************
+// <!-- Section 4 : API Routes -->
+// *****************************************************
+
+// TODO - Include your API routes here
+app.get('/', (req, res) => {
+    res.redirect('/login');
+});
 
 app.get('/login', (req, res) => {
-  // Render login page
-  res.render('login');
-});
+  res.render('pages/login');
+})
 
-// Add more routes as needed
 
-// Start server
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+
+// *****************************************************
+// <!-- Section 5 : Start Server-->
+// *****************************************************
+// starting the server and keeping the connection open to listen for more requests
+app.listen(3000);
+console.log('Server is listening on port 3000');
