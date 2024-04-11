@@ -121,7 +121,7 @@ app.post('/login', async (req, res) => {
       }
       req.session.user = user;
       req.session.save();
-      res.redirect('/discover');
+      //res.redirect('/discover');
   } catch (error) {
       console.error('Error during login:', error);
       res.render('pages/login', { error: 'An error occurred. Please try again.' });
@@ -136,13 +136,6 @@ const auth = (req, res, next) => {
   }
   next();
 };
-
-/*
-lab 11 API
-app.get('/welcome', (req, res) => {
-  res.join({status: 'success', message: 'Welcome!'});
-})
-*/
 
 
 // *****************************************************
