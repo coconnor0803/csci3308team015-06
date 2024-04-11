@@ -62,11 +62,21 @@ app.get('/login', (req, res) => {
   res.render('pages/login');
 })
 
+//lab 11 API
+app.get('/welcome', (req, res) => {
+  res.join({status: 'success', message: 'Welcome!'});
+})
 
 
 // *****************************************************
 // <!-- Section 5 : Start Server-->
 // *****************************************************
 // starting the server and keeping the connection open to listen for more requests
-app.listen(3000);
+//lab 11 change
+//app.listen(3000);
+//to
+module.exports = app.listen(3000);
+
 console.log('Server is listening on port 3000');
+
+
