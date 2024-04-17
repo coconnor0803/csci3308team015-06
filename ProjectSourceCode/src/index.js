@@ -138,7 +138,10 @@ app.get('/logout', (req, res) => {
   req.session.destroy();
   res.render('pages/logout');
 });
-
+app.get('/create', (req, res) => {
+  // Render the create page (assuming you have a create.hbs file in your views directory)
+  res.render('pages/create'); // Assuming you're using Handlebars as your template engine
+});
 // Authentication Middleware.
 const auth = (req, res, next) => {
   if (!req.session.user) {
