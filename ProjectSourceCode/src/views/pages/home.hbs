@@ -7,8 +7,20 @@
 </head>
 <body>
 
+<!-- Button to create a new study set -->
+<a href="/create-study-set">Create New Study Set</a>
 
-<!-- Your content goes here -->
+<!-- Check if studySets array exists and has length -->
+{{#if studySets}}
+  <!-- List of study sets -->
+  <ul>
+    {{#each studySets}}
+      <li>{{this.title}}</li>
+    {{/each}}
+  </ul>
+{{else}}
+  <p>No study sets created yet.</p>
+{{/if}}
 
 </body>
 </html>
