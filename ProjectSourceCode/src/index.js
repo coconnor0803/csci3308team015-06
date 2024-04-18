@@ -92,6 +92,10 @@ app.get('/quiz', (req, res) => {
 app.get('/register', (req, res) => {
   res.render('pages/register');
 });
+app.get('/create', (req, res) => {
+  // Render the create page (assuming you have a create.hbs file in your views directory)
+  res.render('pages/create'); // Assuming you're using Handlebars as your template engine
+});
 
 app.post('/register', async (req, res) => {
   try{

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Set and Upload Terms</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        margin-top: 0;
+    }
+    input[type="file"] {
+        margin-bottom: 10px;
+    }
+    #terms-list {
+        list-style: none;
+        padding: 0;
+    }
+    #terms-list li {
+        margin-bottom: 10px;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h2>Create Set</h2>
+    <form id="create-form" action="/create" method="POST">
+        <label for="setTitle">Set Title:</label>
+        <input type="text" id="setTitle" name="setTitle" required>
+        <br>
+        <div id="terms-container">
+            <div class="term-input">
+                <label for="term1">Term:</label>
+                <input type="text" id="term1" name="term" required>
+                <br>
+                <label for="definition1">Definition:</label>
+                <textarea id="definition1" name="definition" required></textarea>
+                <br>
+            </div>
+        </div>
+        <button type="button" onclick="addTerm()">Add Term</button>
+        <button type="submit">Create Set</button>
+    </form>
+</div>
+
+<div class="container">
+    <h2>Upload Terms</h2>
+    <input type="file" id="file-input" accept=".txt">
+    <button onclick="uploadFile()">Upload</button>
+    <ul id="terms-list"></ul>
+</div>
+
+<script>
+    let termCount = 1;
+
+    function addTerm() {
+        termCount++;
+        const termsContainer = document.getElementById('terms-container');
+        const termInput = document.createElement('div');
+        termInput.classList.add('term-input');
+        termInput.innerHTML = `
+            <label for="term${termCount}">Term:</label>
+            <input type="text" id="term${termCount}" name="term" required>
+            <br>
+            <label for="definition${termCount}">Definition:</label>
+            <textarea id="definition${termCount}" name="definition" required></textarea>
+            <br>
+        `;
+        termsContainer.appendChild(termInput);
+    }
+
+    function uploadFile() {
+        const fileInput = document.getElementById('file-input');
+        const fileList = fileInput.files;
+        
+        if (fileList.length === 0) {
+            alert('Please select a file to upload.');
+            return;
+        }
+        
+        const file = fileList[0];
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            const content = event.target.result;
+            const terms = content.split('\n');
+            
+            const termsList = document.getElementById('terms-list');
+            termsList.innerHTML = '';
+            
+            terms.forEach(term => {
+                const parts = term.split(':');
+                if (parts.length === 2) {
+                    const termName = parts[0].trim();
+                    const termDefinition = parts[1].trim();
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${termName}: ${termDefinition}`;
+                    termsList.appendChild(listItem);
+                }
+            });
+        };
+        
+        reader.readAsText(file);
+    }
+
+    document.getElementById('create-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        alert('Set successfully created!');
+        this.submit();
+    });
+</script>
+</body>
+</html>
