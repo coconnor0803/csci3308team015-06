@@ -170,6 +170,10 @@ app.post('/login', async (req, res) => {
 
 app.get('/home', async (req, res) => {
   try {
+    if (!req.session.user || !req.session.user.username) {
+      // If user is not logged in or username is not defined, redirect to login page
+      return res.redirect('/login');
+    }
     // Fetch study sets for the current user
     const studySets = await db.any('SELECT * FROM study_sets WHERE user_username = $1', req.session.user.username);
     
@@ -181,6 +185,7 @@ app.get('/home', async (req, res) => {
     res.render('pages/home', { studySets: [] });
   }
 });
+
 
 
 //logout route

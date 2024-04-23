@@ -1,12 +1,15 @@
 CREATE TABLE users (
     username VARCHAR(50) PRIMARY KEY,
-    password CHAR(60) NOT NULL
+    password TEXT NOT NULL
 );
 
 CREATE TABLE study_sets (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(255) NOT NULL,
-    user_username VARCHAR(50) REFERENCES users(username) ON DELETE CASCADE
+    title VARCHAR(255),
+    user_username VARCHAR(50),  -- Adjusted data type
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_username) REFERENCES users(username)
 );
 
 CREATE TABLE terms (
