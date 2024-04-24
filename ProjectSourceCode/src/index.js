@@ -187,7 +187,6 @@ app.get('/home', async (req, res) => {
 });
 
 
-
 //logout route
 app.get('/logout', (req, res) => {
   req.session.destroy();
