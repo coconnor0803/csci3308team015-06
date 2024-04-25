@@ -115,10 +115,6 @@ app.post('/register', async (req, res) => {
 
 app.post('/create', async (req, res) => {
   try {
-    // Check if user is logged in
-    if (!req.session.user) {
-      return res.redirect('/login');
-    }
     // Extract title and terms from the request body
     const { title, terms } = req.body;
     
@@ -138,7 +134,7 @@ app.post('/create', async (req, res) => {
     for (const { term, definition } of JSON.parse(terms)) {
       await db.none(
         'INSERT INTO terms (term, definition, study_set_id) VALUES ($1, $2, $3)',
-        [term.term, term.definition, studySetId.id]
+        [term, definition, studySetId]
       );
     }
 
@@ -147,7 +143,7 @@ app.post('/create', async (req, res) => {
   } catch (error) {
     console.error('Error creating set:', error);
     // If an error occurs, render the create page with an error message
-    res.render('pages/create', { error: 'An error occurred while creating the set.', user: req.session.user });
+    res.render('pages/create', { error: 'An error occurred while creating the set.' });
   }
 });
 
