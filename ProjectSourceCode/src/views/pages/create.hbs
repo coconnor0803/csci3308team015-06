@@ -153,7 +153,7 @@
     <h2>Create Set</h2>
     <form id="create-form" action="/create" method="POST">
         <label for="setTitle">Set Title:</label>
-        <input type="text" id="setTitle" name="setTitle" required>
+        <input type="text" id="setTitle" name="title" required>
         <br>
         <div id="terms-container">
             <div class="term-input">
@@ -165,6 +165,7 @@
                 <br>
             </div>
         </div>
+        <input type="hidden" id="terms" name="terms">
         <button type="button" onclick="addTerm()">Add Term</button>
         <button type="submit">Create Set</button>
     </form>
@@ -175,6 +176,7 @@
     <input type="file" id="file-input" accept=".txt">
     <button onclick="uploadFile()">Upload</button>
     <ul id="terms-list"></ul>
+    <input type="hidden" id="uploaded-terms" name="uploadedTerms">
 </div>
 
 <script>
@@ -213,7 +215,9 @@
             const terms = content.split('\n');
             
             const termsList = document.getElementById('terms-list');
+            const uploadedTerms = document.getElementById('uploaded-terms');
             termsList.innerHTML = '';
+            uploadedTerms.value = JSON.stringify(terms.map(term => term.trim()));
             
             terms.forEach(term => {
                 const parts = term.split(':');
@@ -232,7 +236,21 @@
 
     document.getElementById('create-form').addEventListener('submit', function(event) {
         event.preventDefault();
-        alert('Set successfully created!');
+        const terms = [];
+        const termInputs = document.getElementsByName('term');
+        const definitionInputs = document.getElementsByName('definition');
+        
+        for (let i = 0; i < termInputs.length; i++) {
+            const term = termInputs[i].value.trim();
+            const definition = definitionInputs[i].value.trim();
+            if (term && definition) {
+                terms.push({ term, definition });
+            }
+        }
+        
+        const termsInput = document.getElementById('terms');
+        termsInput.value = JSON.stringify(terms);
+        
         this.submit();
     });
 </script>
