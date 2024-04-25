@@ -1,8 +1,8 @@
 const notecards = [
-    { term: 'Term 1', definition: 'Definition 1' },
-    { term: 'Term 2', definition: 'Definition 2' },
-    { term: 'Term 3', definition: 'Definition 3' },
-    { term: 'Term 4', definition: 'Definition 4' }
+    { term: 'Photosynthesis', definition: 'The process by which plants convert sunlight into energy.' },
+    { term: 'DNA', definition: 'Deoxyribonucleic acid is the hereditary material in humans and almost all other organisms.' },
+    { term: 'Solar System', definition: 'The collection of planets, moons, and other celestial bodies that orbit the Sun.' },
+    { term: 'Internet', definition: 'A global computer network providing a variety of information and communication facilities.' }
 ];
 
 let currentIndex = 0;
