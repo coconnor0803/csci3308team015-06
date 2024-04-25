@@ -27,24 +27,25 @@
 <body>
 
 <div class="container">
-    <!-- Button to create a new study set -->
-    <a href="/create" class="btn btn-primary mb-3">Create New Study Set</a>
-
     <!-- Check if studySets array exists and has length -->
     {{#if studySets.length}}
     <!-- Table to display study sets -->
     <table class="table">
         <thead>
             <tr>
-                <th>Title</th>
-                <th>Action</th>
+                <th>Set Name</th>
+                <th class="text-right"></th> <!-- Aligning buttons to the right -->
             </tr>
         </thead>
         <tbody id="studySetBody">
             {{#each studySets}}
             <tr>
                 <td>{{this.title}}</td>
-                <td><a href="/study/{{this.id}}" class="btn btn-success">Study!</a></td>
+                <td class="text-right">
+                    <a href="/study/{{this.id}}" class="btn btn-success">Study!</a>
+                    <a href="/view/{{this.id}}" class="btn btn-info">View/Edit</a>
+                    <button class="btn btn-danger delete-btn" data-id="{{this.id}}">Delete</button>
+                </td>
             </tr>
             {{/each}}
         </tbody>
@@ -52,6 +53,9 @@
     {{else}}
     <p>No study sets created yet.</p>
     {{/if}}
+    <!-- Button to create a new study set -->
+    <a href="/create" class="btn btn-primary mb-3">Create New Study Set</a>
+
 </div>
 
 <!-- Pagination -->
@@ -119,6 +123,31 @@
             if (event.target.tagName === 'A') {
                 var pageNumber = parseInt(event.target.textContent);
                 showStudySets(pageNumber);
+            }
+        });
+
+        // Handle delete button click events
+        document.getElementById('studySetBody').addEventListener('click', function (event) {
+            if (event.target.classList.contains('delete-btn')) {
+                var studySetId = event.target.getAttribute('data-id');
+                var confirmDelete = confirm('Are you sure you want to delete this study set?');
+                if (confirmDelete) {
+                    // Send a DELETE request to delete the study set
+                    fetch(`/delete-set/${studySetId}`, {
+                        method: 'POST'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Remove the corresponding row from the table
+                            event.target.closest('tr').remove();
+                        } else {
+                            throw new Error('Network response was not ok');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+                }
             }
         });
     });
