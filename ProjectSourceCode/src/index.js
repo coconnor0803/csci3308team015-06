@@ -112,6 +112,7 @@ app.post('/register', async (req, res) => {
     console.error('Error during registration:', error);
     res.redirect('/register');  }    
 });
+
 app.post('/create', async (req, res) => {
   try {
     // Extract title and terms from the request body
@@ -121,13 +122,16 @@ app.post('/create', async (req, res) => {
     const username = req.session.user.username;
 
     // Insert the new study set into the database
-    const studySetId = await db.one(
+    const studySet = await db.one(
       'INSERT INTO study_sets (title, user_username) VALUES ($1, $2) RETURNING id',
       [title, username]
     );
 
+    // Extract the id from the studySet object
+    const studySetId = studySet.id;
+
     // Insert each term and definition into the terms table
-    for (const { term, definition } of terms) {
+    for (const { term, definition } of JSON.parse(terms)) {
       await db.none(
         'INSERT INTO terms (term, definition, study_set_id) VALUES ($1, $2, $3)',
         [term, definition, studySetId]
@@ -142,6 +146,8 @@ app.post('/create', async (req, res) => {
     res.render('pages/create', { error: 'An error occurred while creating the set.' });
   }
 });
+
+
 
 app.get('/login', (req, res) => {
   res.render('pages/login');
