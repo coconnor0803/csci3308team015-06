@@ -115,6 +115,10 @@ app.post('/register', async (req, res) => {
 
 app.post('/create', async (req, res) => {
   try {
+    // Check if user is logged in
+    if (!req.session.user) {
+      return res.redirect('/login');
+    }
     // Extract title and terms from the request body
     const { title, terms } = req.body;
     
@@ -134,7 +138,7 @@ app.post('/create', async (req, res) => {
     for (const { term, definition } of JSON.parse(terms)) {
       await db.none(
         'INSERT INTO terms (term, definition, study_set_id) VALUES ($1, $2, $3)',
-        [term, definition, studySetId]
+        [term.term, term.definition, studySetId.id]
       );
     }
 
@@ -143,7 +147,7 @@ app.post('/create', async (req, res) => {
   } catch (error) {
     console.error('Error creating set:', error);
     // If an error occurs, render the create page with an error message
-    res.render('pages/create', { error: 'An error occurred while creating the set.' });
+    res.render('pages/create', { error: 'An error occurred while creating the set.', user: req.session.user });
   }
 });
 
@@ -176,6 +180,10 @@ app.post('/login', async (req, res) => {
 
 app.get('/home', async (req, res) => {
   try {
+    if (!req.session.user || !req.session.user.username) {
+      // If user is not logged in or username is not defined, redirect to login page
+      return res.redirect('/login');
+    }
     // Fetch study sets for the current user
     const studySets = await db.any('SELECT * FROM study_sets WHERE user_username = $1', req.session.user.username);
     
