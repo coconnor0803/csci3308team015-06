@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View/Edit Study Set</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Some custom styles */
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>View/Edit Study Set</h1>
+
+    <!-- Cards to display terms and definitions -->
+    {{#each terms}}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{this.term}}</h5>
+            <p class="card-text">{{this.definition}}</p>
+            <button class="btn btn-danger float-right delete-btn" data-term-id="{{this.id}}">Delete</button>
+        </div>
+    </div>
+    {{/each}}
+</div>
+
+<!-- Bootstrap JS and jQuery (optional) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Function to handle delete button click
+    document.addEventListener('DOMContentLoaded', function () {
+        var deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var termId = button.getAttribute('data-term-id');
+                if (confirm('Are you sure you want to delete this term?')) {
+                    // If user confirms deletion, submit the form
+                    var form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = '/delete-term/' + termId;
+
+                    var hiddenField = document.createElement('input');
+                    hiddenField.type = 'hidden';
+                    hiddenField.name = '_method';
+                    hiddenField.value = 'DELETE';
+                    form.appendChild(hiddenField);
+
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
