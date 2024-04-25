@@ -1,0 +1,47 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.notecard {
+    perspective: 1000px;
+    margin-bottom: 20px;
+}
+
+.notecard-inner {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+.notecard.flipped .notecard-inner {
+    transform: rotateY(180deg);
+}
+
+.notecard-front, .notecard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border: 1px solid #ccc;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: auto;
+}
+
+.notecard-back {
+    transform: rotateY(180deg);
+}
+
+#term, #definition {
+    margin: 0;
+    padding: 20px;
+}
