@@ -8,8 +8,6 @@ CREATE TABLE IF NOT EXISTS study_sets (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255),
     user_username VARCHAR(50),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_username) REFERENCES users(username)
 );
 

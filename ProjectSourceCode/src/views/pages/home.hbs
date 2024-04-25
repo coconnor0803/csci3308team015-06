@@ -11,16 +11,22 @@
 <a href="/create">Create New Study Set</a>
 
 <!-- Check if studySets array exists and has length -->
-{{#if studySets}}
-  <!-- List of study sets -->
+{{#if studySets.length}}
+  <!-- List of study set titles -->
   <ul>
     {{#each studySets}}
-      <li>{{this.title}}</li>
+    <!--
+      {{#if this.title}}
+        <li>{{this.title}}</li>
+      {{/if}}
+      -->
+    <li>{{this.title}}</li>
     {{/each}}
   </ul>
 {{else}}
   <p>No study sets created yet.</p>
 {{/if}}
+
 
 </body>
 </html>

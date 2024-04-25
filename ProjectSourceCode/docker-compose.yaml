@@ -7,10 +7,7 @@ services:
       - '5432'
     volumes:
       - group-project:/var/lib/postgresql/data
-      - ./init_data:/docker-entrypoint-initdb.d  # Mount initialization script
-    networks:
-      - app-network
-
+      - ./src/init_data:/docker-entrypoint-initdb.d
   web:
     image: node:lts
     user: 'node'
@@ -24,12 +21,6 @@ services:
       - '3000:3000'
     volumes:
       - ./:/repository
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
-
+    command: 'npm start'
 volumes:
   group-project:
