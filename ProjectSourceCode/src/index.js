@@ -115,10 +115,6 @@ app.post('/register', async (req, res) => {
 
 app.post('/create', async (req, res) => {
   try {
-    // Check if user is logged in
-    if (!req.session.user) {
-      return res.redirect('/login');
-    }
     // Extract title and terms from the request body
     const { title, terms } = req.body;
     
@@ -126,16 +122,19 @@ app.post('/create', async (req, res) => {
     const username = req.session.user.username;
 
     // Insert the new study set into the database
-    const studySetId = await db.one(
+    const studySet = await db.one(
       'INSERT INTO study_sets (title, user_username) VALUES ($1, $2) RETURNING id',
       [title, username]
     );
 
+    // Extract the id from the studySet object
+    const studySetId = studySet.id;
+
     // Insert each term and definition into the terms table
-    for (const term of terms) {
+    for (const { term, definition } of JSON.parse(terms)) {
       await db.none(
         'INSERT INTO terms (term, definition, study_set_id) VALUES ($1, $2, $3)',
-        [term.term, term.definition, studySetId.id]
+        [term, definition, studySetId]
       );
     }
 
@@ -144,9 +143,11 @@ app.post('/create', async (req, res) => {
   } catch (error) {
     console.error('Error creating set:', error);
     // If an error occurs, render the create page with an error message
-    res.render('pages/create', { error: 'An error occurred while creating the set.', user: req.session.user });
+    res.render('pages/create', { error: 'An error occurred while creating the set.' });
   }
 });
+
+
 
 app.get('/login', (req, res) => {
   res.render('pages/login');
@@ -190,6 +191,62 @@ app.get('/home', async (req, res) => {
     res.render('pages/home', { studySets: [] });
   }
 });
+
+app.get('/view/:id', async (req, res) => {
+  try {
+    // Get the study set ID from the request parameters
+    const studySetId = req.params.id;
+
+    // Fetch the study set data from the database
+    const studySet = await db.one('SELECT * FROM study_sets WHERE id = $1', studySetId);
+    const terms = await db.any('SELECT * FROM terms WHERE study_set_id = $1', studySetId);
+
+    // Render the view page with the study set data
+    res.render('pages/view', { studySet, terms });
+  } catch (error) {
+    console.error('Error fetching study set:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/delete-term/:id', async (req, res) => {
+  try {
+    // Get the term ID from the request parameters
+    const termId = req.params.id;
+    
+    // Get the study set ID from the term to be deleted
+    const { study_set_id } = await db.one('SELECT study_set_id FROM terms WHERE id = $1', termId);
+
+    // Delete the term from the database
+    await db.none('DELETE FROM terms WHERE id = $1', termId);
+
+    // Redirect back to the view page
+    res.redirect(`/view/${study_set_id}`);
+  } catch (error) {
+    console.error('Error deleting term:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/delete-set/:id', async (req, res) => {
+  try {
+    // Get the study set ID from the request parameters
+    const setId = req.params.id;
+    
+    // Delete the study set and associated terms from the database
+    await db.none('DELETE FROM terms WHERE study_set_id = $1', setId);
+    await db.none('DELETE FROM study_sets WHERE id = $1', setId);
+
+    // Redirect back to the home page
+    res.redirect('/home');
+  } catch (error) {
+    console.error('Error deleting study set:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
 
 
 //logout route
