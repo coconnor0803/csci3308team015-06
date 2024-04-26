@@ -1,44 +1,39 @@
-const questions = [
-    {
-        question: "Sample Question 1",
-        answers: [
-            {text: "False Answer", correct: false},
-                
-            {text: "True Answer", correct: true},
-            {text: "False Answer", correct: false},
-            {text: "False Answer", correct: false},
-        ]
-            },
-        {
-            question: "Sample Question 2",
-            answers: [
-                {text: "False Answer", correct: false},
-                    
-                {text: "True Answer", correct: true},
-                {text: "False Answer", correct: false},
-                {text: "False Answer", correct: false},
-            ]
-    },
-    {
-    question: "Sample Question 3",
-    answers: [
-        {text: "False Answer", correct: false},    
-        {text: "False Answer", correct: false},
-        {text: "True Answer", correct: true},
-        {text: "False Answer", correct: false},
-    ]
-},
-{
-    question: "Sample Question 4",
-    answers: [
-        {text: "False Answer", correct: false},
-        {text: "False Answer", correct: false},
-        {text: "False Answer", correct: false},
-        {text: "True Answer", correct: true},
-    ]
-}
+async function fetchQuestionsFromDatabase(connection, studySetTitle) {
+    try {
+        const [studySetRow] = await connection.execute(
+            'SELECT id FROM study_sets WHERE title = ?',
+            [studySetTitle]
+        );
 
-];
+        if (studySetRow.length === 0) {
+            console.error('Study set not found');
+            return [];
+        }
+
+        const studySetId = studySetRow[0].id;
+
+        const [rows] = await connection.query(
+            'SELECT * FROM terms WHERE study_set_id = ?',
+            [studySetId]
+        );
+
+        const questions = rows.map(row => {
+            return {
+                question: row.term,
+                answers: [
+                    { text: row.definition, correct: true },
+                    // Add incorrect answers here if needed
+                ]
+            };
+        });
+
+        return questions;
+    } catch (error) {
+        console.error('Error fetching questions from database:', error);
+        return [];
+    }
+}
+const questions = await fetchQuestionsFromDatabase(connection, studySetTitle);
 
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-buttons");

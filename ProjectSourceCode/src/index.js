@@ -102,9 +102,9 @@ app.post('/register', async (req, res) => {
     //hash the password using bcrypt library
     const hash = await bcrypt.hash(req.body.password, 10);
     const username = req.body.username;
-    const insert = 'INSERT INTO users (username, password) VALUES ($1, $2)';
     const values = [username, hash];
-
+    const insert = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+    
     await db.none(insert, values);
 
     res.redirect('/login');
