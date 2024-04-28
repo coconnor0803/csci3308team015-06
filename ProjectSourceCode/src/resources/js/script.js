@@ -1,12 +1,11 @@
 console.log('IN SCRIPT');
 
-// Add event listener to handle quiz button clicks
+
 document.addEventListener('click', async function(event) {
     if (event.target.classList.contains('quiz-button')) {
         const studySetId = event.target.dataset.id;
         console.log('JS FILE');
         try {
-            // Make a request to the server to fetch questions
             const response = await fetch(`/fetchQuestions?studySetId=${studySetId}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -14,8 +13,6 @@ document.addEventListener('click', async function(event) {
             const questions = await response.json();
             const queryParams = encodeURIComponent(JSON.stringify(questions));
             window.location.href = `/quiz?questions=${queryParams}`;
-     
-            // Proceed with the quiz using the fetched questions
             console.log('inside event listener', questions);
 
             
@@ -49,7 +46,7 @@ function showQuestion() {
     resetState();
     let currentQuestion = questions[currentQuestionIndex];
     let questionNo = currentQuestionIndex + 1;
-    questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
+    questionElement.innerHTML = questionNo + ". " + "What is the definition of " + currentQuestion.question + "?";
 
     currentQuestion.answers.forEach(answer => {
         const button = document.createElement("button");

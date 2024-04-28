@@ -77,57 +77,53 @@ app.use(
 
 
 // TODO - Include your API routes here
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
 async function fetchQuestionsFromDatabase(studySetId) {
   console.log('ACTUALLY CALLING FUNC');
   try {
-      // Execute the SQL query to fetch study set ID
       console.log('study id', studySetId);
-      // Execute the SQL query to fetch questions
       const questionsQuery = await db.query('SELECT * FROM terms WHERE study_set_id = $1', [studySetId]);
       console.log(questionsQuery);
       console.log('test please save me', questionsQuery[1].term);
       console.log('size', questionsQuery.length);
       const questions = [];
       for (let i = 0; i < questionsQuery.length; i++) {
-        const row = questionsQuery[i];
-        
-        // Create an array to store incorrect answers
+        const row = questionsQuery[i];  
         const incorrectAnswers = [];
-        
-        // Retrieve all definitions for the current term except the correct one
         for (let j = 0; j < questionsQuery.length; j++) {
           if (j !== i) {
             incorrectAnswers.push(questionsQuery[j].definition);
             console.log('testing definition', questionsQuery[j].definition);
           }
-          // Stop populating incorrect answers if we have enough (3 or less)
           if (incorrectAnswers.length >= 3) {
             break;
           }
         }
-        
-    
-        // Create an array of answers containing the correct answer and some incorrect ones
         const answers = [
           { text: row.definition, correct: true }
         ];
         console.log('incorrect answer length', incorrectAnswers.length);
-        // Add incorrect answers from the shuffled array
+    
         for (let k = 0; k < incorrectAnswers.length; k++) {
           answers.push({ text: incorrectAnswers[k], correct: false });
         }
-        
-        // Shuffle the answers array to randomize the order
-        
+        shuffleArray(answers);
+
         const questionObj = {
           question: row.term,
           answers: answers
         };
-  
+        
         questions.push(questionObj);
         console.log(questionObj);
       }
-  
+
+      shuffleArray(questions);
       return questions;
     } catch (error) {
       console.error('Error fetching questions from database:', error);
@@ -137,7 +133,7 @@ async function fetchQuestionsFromDatabase(studySetId) {
 
 app.get('/fetchQuestions', async (req, res) => {
   console.log('i am here');
-  const { studySetId } = req.query; // Assuming you're passing studySetTitle as a query parameter
+  const { studySetId } = req.query;
   try {
       const questions = await fetchQuestionsFromDatabase(studySetId);
       res.json(questions);
@@ -147,7 +143,6 @@ app.get('/fetchQuestions', async (req, res) => {
   }
 });
 
-// Serve your static files (script.js, etc.)
 app.use(express.static('public'));
 
 
