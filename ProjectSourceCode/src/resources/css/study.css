@@ -1,0 +1,89 @@
+/* General container styles to center and constrain notecard width */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* Styles for the notecard, including perspective for flip animation */
+.notecard {
+    perspective: 1000px;
+    margin-bottom: 20px;
+}
+
+/* Inner notecard styling to allow it to flip on click */
+.notecard-inner {
+    position: relative;
+    width: 100%;
+    height: 450px;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+}
+
+/* When the notecard has the flipped class, rotate it to show the back */
+.notecard.flipped .notecard-inner {
+    transform: rotateY(180deg);
+}
+
+/* Front and back shared styles for alignment and text formatting */
+.notecard-front, .notecard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 20px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: auto;
+}
+
+/* Additional styling for the front of the notecard */
+.notecard-front {
+    background-color: #fff;
+    color: #333;
+}
+
+/* Additional styling for the back of the notecard */
+.notecard-back {
+    background-color: #f7f7f7;
+    color: #333;
+    transform: rotateY(180deg);
+}
+
+/* Styling for the term text */
+#term {
+    font-size: 2em; /* Larger font size for the term */
+    font-weight: bold;
+}
+
+/* Styling for the definition text */
+#definition {
+    font-size: 1em; /* Standard font size for the definition */
+}
+
+/* Next button styling */
+#next-btn {
+    background-color: #1e90ff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+/* Next button hover effect */
+#next-btn:hover {
+    background-color: #0d6efd;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .not
+

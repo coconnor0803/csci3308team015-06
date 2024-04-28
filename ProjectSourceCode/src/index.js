@@ -97,6 +97,10 @@ app.get('/create', (req, res) => {
   res.render('pages/create'); // Assuming you're using Handlebars as your template engine
 });
 
+app.get('/study', (req, res) => {
+    res.render('pages/study');
+});
+
 app.post('/register', async (req, res) => {
   try{
     //hash the password using bcrypt library
