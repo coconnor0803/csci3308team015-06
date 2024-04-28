@@ -14,6 +14,8 @@ const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 
 app.use(express.static(__dirname + '/resources'));
+
+
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
@@ -32,7 +34,6 @@ const dbConfig = {
   user: process.env.POSTGRES_USER, // the user account to connect with
   password: process.env.POSTGRES_PASSWORD, // the password of the user account
 };
-
 const db = pgp(dbConfig);
 
 // test your database
@@ -74,7 +75,80 @@ app.use(
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 
+
 // TODO - Include your API routes here
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+}
+async function fetchQuestionsFromDatabase(studySetId) {
+  console.log('ACTUALLY CALLING FUNC');
+  try {
+      console.log('study id', studySetId);
+      const questionsQuery = await db.query('SELECT * FROM terms WHERE study_set_id = $1', [studySetId]);
+      console.log(questionsQuery);
+      console.log('test please save me', questionsQuery[1].term);
+      console.log('size', questionsQuery.length);
+      const questions = [];
+      for (let i = 0; i < questionsQuery.length; i++) {
+        const row = questionsQuery[i];  
+        const incorrectAnswers = [];
+        for (let j = 0; j < questionsQuery.length; j++) {
+          if (j !== i) {
+            incorrectAnswers.push(questionsQuery[j].definition);
+            console.log('testing definition', questionsQuery[j].definition);
+          }
+          if (incorrectAnswers.length >= 3) {
+            break;
+          }
+        }
+        const answers = [
+          { text: row.definition, correct: true }
+        ];
+        console.log('incorrect answer length', incorrectAnswers.length);
+    
+        for (let k = 0; k < incorrectAnswers.length; k++) {
+          answers.push({ text: incorrectAnswers[k], correct: false });
+        }
+        shuffleArray(answers);
+
+        const questionObj = {
+          question: row.term,
+          answers: answers
+        };
+        
+        questions.push(questionObj);
+        console.log(questionObj);
+      }
+
+      shuffleArray(questions);
+      return questions;
+    } catch (error) {
+      console.error('Error fetching questions from database:', error);
+      return [];
+    }
+  }
+
+app.get('/fetchQuestions', async (req, res) => {
+  console.log('i am here');
+  const { studySetId } = req.query;
+  try {
+      const questions = await fetchQuestionsFromDatabase(studySetId);
+      res.json(questions);
+  } catch (error) {
+      console.error('Error fetching questions:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.use(express.static('public'));
+
+
+
+
+
 app.get('/', (req, res) => {
     res.redirect('/login');
 });
@@ -106,9 +180,9 @@ app.post('/register', async (req, res) => {
     //hash the password using bcrypt library
     const hash = await bcrypt.hash(req.body.password, 10);
     const username = req.body.username;
-    const insert = 'INSERT INTO users (username, password) VALUES ($1, $2)';
     const values = [username, hash];
-
+    const insert = 'INSERT INTO users (username, password) VALUES ($1, $2)';
+    
     await db.none(insert, values);
 
     res.redirect('/login');

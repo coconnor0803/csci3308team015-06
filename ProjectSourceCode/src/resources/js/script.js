@@ -1,53 +1,41 @@
-const questions = [
-    {
-        question: "Sample Question 1",
-        answers: [
-            {text: "False Answer", correct: false},
-                
-            {text: "True Answer", correct: true},
-            {text: "False Answer", correct: false},
-            {text: "False Answer", correct: false},
-        ]
-            },
-        {
-            question: "Sample Question 2",
-            answers: [
-                {text: "False Answer", correct: false},
-                    
-                {text: "True Answer", correct: true},
-                {text: "False Answer", correct: false},
-                {text: "False Answer", correct: false},
-            ]
-    },
-    {
-    question: "Sample Question 3",
-    answers: [
-        {text: "False Answer", correct: false},    
-        {text: "False Answer", correct: false},
-        {text: "True Answer", correct: true},
-        {text: "False Answer", correct: false},
-    ]
-},
-{
-    question: "Sample Question 4",
-    answers: [
-        {text: "False Answer", correct: false},
-        {text: "False Answer", correct: false},
-        {text: "False Answer", correct: false},
-        {text: "True Answer", correct: true},
-    ]
-}
+console.log('IN SCRIPT');
 
-];
+
+document.addEventListener('click', async function(event) {
+    if (event.target.classList.contains('quiz-button')) {
+        const studySetId = event.target.dataset.id;
+        console.log('JS FILE');
+        try {
+            const response = await fetch(`/fetchQuestions?studySetId=${studySetId}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const questions = await response.json();
+            const queryParams = encodeURIComponent(JSON.stringify(questions));
+            window.location.href = `/quiz?questions=${queryParams}`;
+            console.log('inside event listener', questions);
+
+            
+        } 
+         catch (error) {
+            console.error('Error fetching questions:', error);
+        }
+       
+    }
+});
+const queryParams = new URLSearchParams(window.location.search);
+const questionsParam = queryParams.get('questions');
+const questions = JSON.parse(decodeURIComponent(questionsParam))
 
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-buttons");
 const nextButton = document.getElementById("next-btn");
-
+console.log('ARE WE EVER HERE?', nextButton);
 let currentQuestionIndex = 0;
 let score = 0;
-
+console.log('Lost', questions);
 function startQuiz() {
+    console.log('inside startquiz', questions);
     currentQuestionIndex = 0;
     score = 0;
     nextButton.innerHTML = "Next";
@@ -58,7 +46,7 @@ function showQuestion() {
     resetState();
     let currentQuestion = questions[currentQuestionIndex];
     let questionNo = currentQuestionIndex + 1;
-    questionElement.innerHTML = questionNo + ". " + currentQuestion.question;
+    questionElement.innerHTML = questionNo + ". " + "What is the definition of " + currentQuestion.question + "?";
 
     currentQuestion.answers.forEach(answer => {
         const button = document.createElement("button");
@@ -122,5 +110,9 @@ nextButton.addEventListener("click", ()=> {
     }else {
         startQuiz();
     }
+
+    
     });
+
 startQuiz();
+
