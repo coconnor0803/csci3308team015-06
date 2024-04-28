@@ -1,0 +1,38 @@
+/* Dark mode styles */
+body.dark-mode {
+  background-color: #1c1c1c;
+  color: #ffffff;
+}
+
+.dark-mode .navbar {
+  background-color: #121212;
+}
+
+.dark-mode .nav-link {
+  color: #ffffff;
+}
+
+.dark-mode .btn {
+  background-color: #2c2c2c;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+
+.dark-mode .btn:hover {
+  background-color: #ffffff;
+  color: #2c2c2c;
+}
+
+.dark-mode .app {
+  background-color: #2c2c2c;
+}
+
+.dark-mode .quiz h2 {
+  color: #ffffff;
+}
+
+.dark-mode .card {
+  background-color: #3c3c3c;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 123, 255, 0.1);
+}
