@@ -44,7 +44,8 @@
                 <td class="text-right">
                     <a href="/study/{{this.id}}" class="btn btn-success">Study!</a>
                     <a href="/view/{{this.id}}" class="btn btn-info">View/Edit</a>
-                    <button class="btn btn-danger delete-btn" data-id="{{this.id}}">Delete</button>
+                    <button class="btn btn-danger delete-btn" data-id="{{this.id}}" >Delete</button>
+                    <a href="/quiz" class="quiz-button" role="button" data-id="{{this.id}}" data-title="{{this.title}}">Quiz</a>
                 </td>
             </tr>
             {{/each}}
@@ -69,7 +70,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
+<script src="/js/script.js"> </script>
 <script>
     // Function to create pagination links
     function createPaginationLinks(totalPages) {

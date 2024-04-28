@@ -1,48 +1,44 @@
-async function fetchQuestionsFromDatabase(connection, studySetTitle) {
-    try {
-        const [studySetRow] = await connection.execute(
-            'SELECT id FROM study_sets WHERE title = ?',
-            [studySetTitle]
-        );
+console.log('IN SCRIPT');
 
-        if (studySetRow.length === 0) {
-            console.error('Study set not found');
-            return [];
+// Add event listener to handle quiz button clicks
+document.addEventListener('click', async function(event) {
+    if (event.target.classList.contains('quiz-button')) {
+        const studySetId = event.target.dataset.id;
+        console.log('JS FILE');
+        try {
+            // Make a request to the server to fetch questions
+            const response = await fetch(`/fetchQuestions?studySetId=${studySetId}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const questions = await response.json();
+            const queryParams = encodeURIComponent(JSON.stringify(questions));
+            window.location.href = `/quiz?questions=${queryParams}`;
+     
+            // Proceed with the quiz using the fetched questions
+            console.log('inside event listener', questions);
+
+            
+        } 
+         catch (error) {
+            console.error('Error fetching questions:', error);
         }
-
-        const studySetId = studySetRow[0].id;
-
-        const [rows] = await connection.query(
-            'SELECT * FROM terms WHERE study_set_id = ?',
-            [studySetId]
-        );
-
-        const questions = rows.map(row => {
-            return {
-                question: row.term,
-                answers: [
-                    { text: row.definition, correct: true },
-                    // Add incorrect answers here if needed
-                ]
-            };
-        });
-
-        return questions;
-    } catch (error) {
-        console.error('Error fetching questions from database:', error);
-        return [];
+       
     }
-}
-const questions = await fetchQuestionsFromDatabase(connection, studySetTitle);
+});
+const queryParams = new URLSearchParams(window.location.search);
+const questionsParam = queryParams.get('questions');
+const questions = JSON.parse(decodeURIComponent(questionsParam))
 
 const questionElement = document.getElementById("question");
 const answerButtons = document.getElementById("answer-buttons");
 const nextButton = document.getElementById("next-btn");
-
+console.log('ARE WE EVER HERE?', nextButton);
 let currentQuestionIndex = 0;
 let score = 0;
-
+console.log('Lost', questions);
 function startQuiz() {
+    console.log('inside startquiz', questions);
     currentQuestionIndex = 0;
     score = 0;
     nextButton.innerHTML = "Next";
@@ -117,5 +113,9 @@ nextButton.addEventListener("click", ()=> {
     }else {
         startQuiz();
     }
+
+    
     });
+
 startQuiz();
+

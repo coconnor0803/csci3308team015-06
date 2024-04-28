@@ -14,6 +14,8 @@ const bcrypt = require('bcrypt'); //  To hash passwords
 const axios = require('axios'); // To make HTTP requests from our server. We'll learn more about it in Part C.
 
 app.use(express.static(__dirname + '/resources'));
+
+
 // *****************************************************
 // <!-- Section 2 : Connect to DB -->
 // *****************************************************
@@ -32,7 +34,6 @@ const dbConfig = {
   user: process.env.POSTGRES_USER, // the user account to connect with
   password: process.env.POSTGRES_PASSWORD, // the password of the user account
 };
-
 const db = pgp(dbConfig);
 
 // test your database
@@ -74,7 +75,85 @@ app.use(
 // <!-- Section 4 : API Routes -->
 // *****************************************************
 
+
 // TODO - Include your API routes here
+async function fetchQuestionsFromDatabase(studySetId) {
+  console.log('ACTUALLY CALLING FUNC');
+  try {
+      // Execute the SQL query to fetch study set ID
+      console.log('study id', studySetId);
+      // Execute the SQL query to fetch questions
+      const questionsQuery = await db.query('SELECT * FROM terms WHERE study_set_id = $1', [studySetId]);
+      console.log(questionsQuery);
+      console.log('test please save me', questionsQuery[1].term);
+      console.log('size', questionsQuery.length);
+      const questions = [];
+      for (let i = 0; i < questionsQuery.length; i++) {
+        const row = questionsQuery[i];
+        
+        // Create an array to store incorrect answers
+        const incorrectAnswers = [];
+        
+        // Retrieve all definitions for the current term except the correct one
+        for (let j = 0; j < questionsQuery.length; j++) {
+          if (j !== i) {
+            incorrectAnswers.push(questionsQuery[j].definition);
+            console.log('testing definition', questionsQuery[j].definition);
+          }
+          // Stop populating incorrect answers if we have enough (3 or less)
+          if (incorrectAnswers.length >= 3) {
+            break;
+          }
+        }
+        
+    
+        // Create an array of answers containing the correct answer and some incorrect ones
+        const answers = [
+          { text: row.definition, correct: true }
+        ];
+        console.log('incorrect answer length', incorrectAnswers.length);
+        // Add incorrect answers from the shuffled array
+        for (let k = 0; k < incorrectAnswers.length; k++) {
+          answers.push({ text: incorrectAnswers[k], correct: false });
+        }
+        
+        // Shuffle the answers array to randomize the order
+        
+        const questionObj = {
+          question: row.term,
+          answers: answers
+        };
+  
+        questions.push(questionObj);
+        console.log(questionObj);
+      }
+  
+      return questions;
+    } catch (error) {
+      console.error('Error fetching questions from database:', error);
+      return [];
+    }
+  }
+
+app.get('/fetchQuestions', async (req, res) => {
+  console.log('i am here');
+  const { studySetId } = req.query; // Assuming you're passing studySetTitle as a query parameter
+  try {
+      const questions = await fetchQuestionsFromDatabase(studySetId);
+      res.json(questions);
+  } catch (error) {
+      console.error('Error fetching questions:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// Serve your static files (script.js, etc.)
+app.use(express.static('public'));
+
+
+
+
+
 app.get('/', (req, res) => {
     res.redirect('/login');
 });
