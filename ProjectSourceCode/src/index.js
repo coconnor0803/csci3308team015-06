@@ -25,6 +25,11 @@ const hbs = handlebars.create({
   extname: 'hbs',
   layoutsDir: __dirname + '/views/layouts',
   partialsDir: __dirname + '/views/partials',
+  helpers: {
+    json: function (context) {
+      return JSON.stringify(context);
+    },
+  },
 });
 
 const dbConfig = {
@@ -267,6 +272,18 @@ app.get('/home', async (req, res) => {
     console.error('Error fetching study sets:', error);
     // If an error occurs, render the home page without study sets
     res.render('pages/home', { studySets: [] });
+  }
+});
+
+app.get('/study/:id', async (req, res) => {
+  try {
+    const studySetId = req.params.id;
+    const studySet = await db.one('SELECT * FROM study_sets WHERE id = $1', studySetId);
+    const terms = await db.any('SELECT * FROM terms WHERE study_set_id = $1', studySetId);
+    res.render('pages/study', { studySet, terms });
+  } catch (error) {
+    console.error('Error fetching study set:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 
