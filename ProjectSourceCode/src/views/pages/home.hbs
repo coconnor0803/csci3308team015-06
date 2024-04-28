@@ -58,6 +58,7 @@
           <a href="/study/{{this.id}}" class="btn btn-success">Study!</a>
           <a href="/view/{{this.id}}" class="btn btn-info">View/Edit</a>
           <button class="btn btn-danger delete-btn" data-id="{{this.id}}">Delete</button>
+           <a href="/quiz" class="quiz-button" role="button" data-id="{{this.id}}" data-title="{{this.title}}">Quiz</a>
         </td>
       </tr>
       {{/each}}
