@@ -31,6 +31,21 @@
     #terms-list li {
         margin-bottom: 10px;
     }
+    button{
+        background-color:rgb(0, 136, 255);
+        color:white;
+        border-radius:12px;
+        border: rgb(0, 136, 255);
+        padding:6px 20px;
+    }
+    input{
+        width: 30%;
+        border-radius:3px;
+    }
+    textarea {
+        width: 100%;
+        border-radius:6px;
+    }
 </style>
 </head>
 <body>
@@ -40,6 +55,7 @@
         <label for="setTitle">Set Title:</label>
         <input type="text" id="setTitle" name="title" required>
         <br>
+        <br>
         <div id="terms-container">
             <div class="term-input">
                 <label for="term1">Term:</label>
@@ -47,6 +63,7 @@
                 <br>
                 <label for="definition1">Definition:</label>
                 <textarea id="definition1" name="definition" required></textarea>
+                <br>
                 <br>
             </div>
         </div>
@@ -78,6 +95,7 @@
             <br>
             <label for="definition${termCount}">Definition:</label>
             <textarea id="definition${termCount}" name="definition" required></textarea>
+            <br>
             <br>
         `;
         termsContainer.appendChild(termInput);

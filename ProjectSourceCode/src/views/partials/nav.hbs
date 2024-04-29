@@ -1,4 +1,24 @@
 <header>
+  <style>
+    #LearnMasterCenter{
+      margin-left: 560px;
+      font-size: 30px;
+      color: rgb(0, 128, 255);
+      font-weight: bold;
+      margin-top:-12px;
+      margin-bottom:-5px;
+    }
+    a:hover{
+      background-color: #ddd;
+      color: white;
+      border-radius:12px;
+    }
+
+    a:active{
+      background-color: #04AA6D;
+      color: white;
+    }
+  </style>
   <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
       <ul class="navbar-nav mr-auto">
@@ -8,8 +28,8 @@
         <li class="nav-item">
           <a class="nav-link" href="/login">Login</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Log out</a>
+        <li>
+          <a class="nav-link" href="/home" id="LearnMasterCenter">LearnMaster</a>
         </li>
       </ul>
     </div>
@@ -19,6 +39,9 @@
           <button id="dark-mode-toggle" class="btn">
             <i class="fas fa-moon"></i>
           </button>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Log out</a>
         </li>
       </ul>
     </div>

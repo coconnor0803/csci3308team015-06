@@ -369,8 +369,14 @@ app.post('/delete-set/:id', async (req, res) => {
 
 //logout route
 app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.render('pages/logout');
+  if (!req.session.user || !req.session.user.username) {
+    // If user is not logged in or username is not defined, redirect to login page
+    return res.redirect('/login');
+  }
+  else{
+    req.session.destroy();
+    res.render('pages/logout');
+  }
 });
 
 // Authentication Middleware.
