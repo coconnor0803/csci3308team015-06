@@ -230,6 +230,29 @@ app.post('/create', async (req, res) => {
   }
 });
 
+app.post('/add-term/:studySetId', async (req, res) => {
+  try {
+    // Extract term and definition from the request body
+    const { term, definition } = req.body;
+    // Extract study set ID from the request parameters
+    const studySetId = req.params.studySetId;
+
+    // Insert the new term into the terms table
+    await db.none(
+      'INSERT INTO terms (term, definition, study_set_id) VALUES ($1, $2, $3)',
+      [term, definition, studySetId]
+    );
+
+    // Redirect the user back to the view/edit page for the study set
+    res.redirect(`/view/${studySetId}`);
+  } catch (error) {
+    console.error('Error adding term:', error);
+    // If an error occurs, render an error message
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
 
 
 app.get('/login', (req, res) => {

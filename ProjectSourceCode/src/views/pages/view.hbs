@@ -13,6 +13,38 @@
         }
         .card {
             margin-bottom: 20px;
+            position: relative;
+        }
+        .delete-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .pagination-container {
+            margin-top: 20px;
+            margin-bottom: 40px; /* Increased margin-bottom for more space */
+        }
+        .pagination {
+            margin: 0;
+        }
+        .pagination li {
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .pagination li:last-child {
+            margin-right: 0;
+        }
+        .pagination li a,
+        .pagination li span {
+            padding: 10px 15px;
+            border: 1px solid #007bff;
+            color: #007bff;
+            cursor: pointer;
+        }
+        .pagination li.active a {
+            background-color: #007bff;
+            color: #fff;
+            border-color: #007bff;
         }
     </style>
 </head>
@@ -22,15 +54,54 @@
     <h1>View/Edit Study Set</h1>
 
     <!-- Cards to display terms and definitions -->
-    {{#each terms}}
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">{{this.term}}</h5>
-            <p class="card-text">{{this.definition}}</p>
-            <button class="btn btn-danger float-right delete-btn" data-term-id="{{this.id}}">Delete</button>
+    <div id="cards-container">
+        {{#each terms}}
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{this.term}}</h5>
+                <p class="card-text">{{this.definition}}</p>
+                <button class="btn btn-danger delete-btn" data-term-id="{{this.id}}">Delete</button>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+
+    <!-- Button to add a new term -->
+    <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addTermModal">Add New Term</button>
+
+    <!-- Modal for adding a new term -->
+    <div class="modal fade" id="addTermModal" tabindex="-1" role="dialog" aria-labelledby="addTermModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTermModalLabel">Add New Term</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="add-term-form">
+                        <div class="form-group">
+                            <label for="term">Term:</label>
+                            <input type="text" class="form-control" id="term" name="term" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="definition">Definition:</label>
+                            <textarea class="form-control" id="definition" name="definition" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add Term</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    {{/each}}
+
+    <!-- Pagination -->
+    <div class="pagination-container">
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center" id="pagination"></ul>
+        </nav>
+    </div>
 </div>
 
 <!-- Bootstrap JS and jQuery (optional) -->
@@ -39,27 +110,153 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <script>
-    // Function to handle delete button click
     document.addEventListener('DOMContentLoaded', function () {
-        var deleteButtons = document.querySelectorAll('.delete-btn');
-        deleteButtons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                var termId = button.getAttribute('data-term-id');
-                if (confirm('Are you sure you want to delete this term?')) {
-                    // If user confirms deletion, submit the form
-                    var form = document.createElement('form');
-                    form.method = 'POST';
-                    form.action = '/delete-term/' + termId;
+        var cardsContainer = document.getElementById('cards-container');
+        var totalCards = document.querySelectorAll('.card').length;
+        var cardsPerPage = 5;
+        var totalPages = Math.ceil(totalCards / cardsPerPage);
+        var currentPage = 1;
 
-                    var hiddenField = document.createElement('input');
-                    hiddenField.type = 'hidden';
-                    hiddenField.name = '_method';
-                    hiddenField.value = 'DELETE';
-                    form.appendChild(hiddenField);
-
-                    document.body.appendChild(form);
-                    form.submit();
+        // Function to show/hide cards based on pagination
+        function showPage(page) {
+            var start = (page - 1) * cardsPerPage;
+            var end = start + cardsPerPage;
+            var cards = document.querySelectorAll('.card');
+            cards.forEach(function (card, index) {
+                if (index >= start && index < end) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
                 }
+            });
+        }
+
+        showPage(currentPage);
+
+        // Function to update pagination
+        function updatePagination() {
+            var pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+
+            // Previous button
+            var prevPage = document.createElement('li');
+            prevPage.classList.add('page-item');
+            if (currentPage === 1) {
+                prevPage.classList.add('disabled');
+            }
+            var prevLink = document.createElement('a');
+            prevLink.classList.add('page-link');
+            prevLink.href = '#';
+            prevLink.innerHTML = '&laquo;';
+            prevPage.appendChild(prevLink);
+            pagination.appendChild(prevPage);
+
+            // Page numbers
+            for (var i = 1; i <= totalPages; i++) {
+                var pageItem = document.createElement('li');
+                pageItem.classList.add('page-item');
+                if (i === currentPage) {
+                    pageItem.classList.add('active');
+                }
+                var pageLink = document.createElement('a');
+                pageLink.classList.add('page-link');
+                pageLink.href = '#';
+                pageLink.textContent = i;
+                pageItem.appendChild(pageLink);
+                pagination.appendChild(pageItem);
+            }
+
+            // Next button
+            var nextPage = document.createElement('li');
+            nextPage.classList.add('page-item');
+            if (currentPage === totalPages) {
+                nextPage.classList.add('disabled');
+            }
+            var nextLink = document.createElement('a');
+            nextLink.classList.add('page-link');
+            nextLink.href = '#';
+            nextLink.innerHTML = '&raquo;';
+            nextPage.appendChild(nextLink);
+            pagination.appendChild(nextPage);
+        }
+
+        updatePagination();
+
+        // Function to handle pagination click events
+        document.getElementById('pagination').addEventListener('click', function (event) {
+            var target = event.target;
+            if (target.tagName === 'A' && !target.parentNode.classList.contains('disabled')) {
+                if (target.parentNode.id === 'prev-page') {
+                    currentPage--;
+                } else if (target.parentNode.id === 'next-page') {
+                    currentPage++;
+                } else {
+                    currentPage = parseInt(target.textContent);
+                }
+                showPage(currentPage);
+                updatePagination();
+            }
+        });
+
+        // Function to handle delete term click events
+        document.getElementById('cards-container').addEventListener('click', function (event) {
+            if (event.target.classList.contains('delete-btn')) {
+                var termId = event.target.getAttribute('data-term-id');
+                var confirmDelete = confirm('Are you sure you want to delete this term?');
+                if (confirmDelete) {
+                    // Send a DELETE request to delete the term
+                    fetch(`/delete-term/${termId}`, {
+                        method: 'POST'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            // Remove the corresponding card from the view
+                            event.target.closest('.card').remove();
+                            totalCards--;
+                            totalPages = Math.ceil(totalCards / cardsPerPage);
+                            if (currentPage > totalPages) {
+                                currentPage = totalPages;
+                            }
+                            showPage(currentPage);
+                            updatePagination();
+                        } else {
+                            throw new Error('Network response was not ok');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the fetch operation:', error);
+                    });
+                }
+            }
+        });
+
+        // Function to handle add term form submission
+        document.getElementById('add-term-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var term = document.getElementById('term').value;
+            var definition = document.getElementById('definition').value;
+
+            // Get the study set ID from the URL
+            var studySetId = window.location.pathname.split('/').pop();
+
+            fetch(`/add-term/${studySetId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ term: term, definition: definition })
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Reload the page to display the added term
+                    window.location.reload();
+                } else {
+                    throw new Error('Network response was not ok');
+                }
+            })
+            .catch(error => {
+                console.error('There was a problem with the fetch operation:', error);
             });
         });
     });
