@@ -1,6 +1,4 @@
 console.log('IN SCRIPT');
-
-
 document.addEventListener('click', async function(event) {
     if (event.target.classList.contains('quiz-button')) {
         const studySetId = event.target.dataset.id;
@@ -14,8 +12,6 @@ document.addEventListener('click', async function(event) {
             const queryParams = encodeURIComponent(JSON.stringify(questions));
             window.location.href = `/quiz?questions=${queryParams}`;
             console.log('inside event listener', questions);
-
-            
         } 
          catch (error) {
             console.error('Error fetching questions:', error);
@@ -47,7 +43,6 @@ function showQuestion() {
     let currentQuestion = questions[currentQuestionIndex];
     let questionNo = currentQuestionIndex + 1;
     questionElement.innerHTML = questionNo + ". " + "What is the definition of " + currentQuestion.question + "?";
-
     currentQuestion.answers.forEach(answer => {
         const button = document.createElement("button");
         button.innerHTML = answer.text;
