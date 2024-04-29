@@ -3,6 +3,7 @@
     max-width: 800px;
     margin: 0 auto;
     text-align: center;
+    background-color: transparent;
 }
 
 /* Styles for the notecard, including perspective for flip animation */
@@ -53,6 +54,13 @@
     background-color: #f7f7f7;
     color: #333;
     transform: rotateY(180deg);
+}
+
+.dark-mode .notecard-front,
+.dark-mode .notecard-back {
+  background-color: #2B2B2B;
+  color: #FFFFFF;
+  border-color: #2B2B2B;
 }
 
 /* Styling for the term text */

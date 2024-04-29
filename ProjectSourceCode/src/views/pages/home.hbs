@@ -37,11 +37,19 @@
             background-color: #f8f9fa;
             padding: 20px 0;
         }
+        .dark-mode .table thead th {
+            background-color: #2B2B2B;
+            color: #FFFFFF;
+        }
+        .dark-mode .text-muted {
+            color: #FFFFFF !important;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
+  <h3>Study Sets</h3>
   {{#if studySets.length}}
   <table class="table">
     <thead>
@@ -50,19 +58,21 @@
         <th class="text-right"></th>
       </tr>
     </thead>
-    <tbody>
-      {{#each studySets}}
-      <tr>
-        <td>{{this.title}}</td>
-        <td class="text-right">
-          <a href="/study/{{this.id}}" class="btn btn-success">Study!</a>
-          <a href="/view/{{this.id}}" class="btn btn-info">View/Edit</a>
-          <button class="btn btn-danger delete-btn" data-id="{{this.id}}">Delete</button>
-           <a href="/quiz" class="quiz-button" role="button" data-id="{{this.id}}" data-title="{{this.title}}">Quiz</a>
-        </td>
-      </tr>
-      {{/each}}
-    </tbody>
+   <tbody id="studySetBody">
+  {{#each studySets}}
+  <tr>
+    <td class="text-left">
+      <p> {{this.title}} </p>
+    </td>
+    <td class="text-right">
+      <a href="/study/{{this.id}}" class="btn btn-success">Study</a>
+      <a href="/view/{{this.id}}" class="btn btn-info">View/Edit</a>
+      <button class="btn btn-danger delete-btn" data-id="{{this.id}}">Delete</button>
+    </td>
+  </tr>
+  {{/each}}
+  </tbody>
+
   </table>
   {{else}}
   <p>No study sets created yet.</p>
@@ -153,6 +163,7 @@
                         if (response.ok) {
                             // Remove the corresponding row from the table
                             event.target.closest('tr').remove();
+                            showStudySets(1); // Refresh the pagination after deleting a set
                         } else {
                             throw new Error('Network response was not ok');
                         }

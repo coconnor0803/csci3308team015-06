@@ -1,38 +1,174 @@
 /* Dark mode styles */
 body.dark-mode {
-  background-color: #1c1c1c;
-  color: #ffffff;
+  background-color: #222122;
+  color: #FFFFFF;
 }
 
-.dark-mode .navbar {
-  background-color: #121212;
+.dark-mode .navbar-custom {
+  background-color: #2B2B2B;
 }
 
 .dark-mode .nav-link {
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
 .dark-mode .btn {
-  background-color: #2c2c2c;
-  color: #ffffff;
-  border-color: #ffffff;
+  background-color: #C34C23;
+  color: #FFFFFF;
+  border-color: #C34C23;
 }
 
 .dark-mode .btn:hover {
-  background-color: #ffffff;
-  color: #2c2c2c;
+  background-color: #650A53;
+  border-color: #650A53;
 }
 
 .dark-mode .app {
-  background-color: #2c2c2c;
+  background-color: #2B2B2B;
 }
 
 .dark-mode .quiz h2 {
-  color: #ffffff;
+  color: #FFFFFF;
 }
 
-.dark-mode .card {
-  background-color: #3c3c3c;
-  color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 123, 255, 0.1);
+.dark-mode .term-input {
+  background-color: #222122;
+  color: #FFFFFF;
+}
+.dark-mode .container {
+  background-color: #222122;
+  color: #FFFFFF;
+}
+.dark-mode #terms-container,
+.dark-mode .card,
+.dark-mode .notecard {
+  background-color: #2B2B2B;
+  color: #FFFFFF;
+}
+
+dark-mode .notecard-front,
+.dark-mode .notecard-back {
+  background-color: #2B2B2B;
+  color: #FFFFFF;
+  border-color: #2B2B2B;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1), 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .notecard {
+  background-color: #222122;
+  color: #FFFFFF;
+  border-color: #222122;
+}
+
+.dark-mode .pagination-container {
+  background-color: #2B2B2B;
+}
+
+.dark-mode .navbar-custom {
+  background-color: #2B2B2B;
+}
+
+.dark-mode .navbar-custom .nav-link {
+  color: #FFFFFF;
+}
+
+.dark-mode .text-right{
+  background-color: #2B2B2B;
+  color: #FFFFFF;
+}
+
+.dark-mode .text-right{
+  background-color: #2B2B2B;
+  color: #FFFFFF;
+}
+
+.dark-mode .text-left{
+  background-color: #2B2B2B;
+  color: #FFFFFF;
+}
+
+.dark-mode #msg1,
+.dark-mode #msg2 {
+  color: #FFFFFF;
+}
+
+.dark-mode footer {
+  background-color: #2B2B2B;
+  color: #FFFFFF;
+}
+
+/* Light mode styles */
+body:not(.dark-mode) {
+  background-color: #FFFFFF;
+  color: #000000;
+}
+
+body:not(.dark-mode) .term-input {
+  background-color: #FFFFFF;
+}
+
+body:not(.dark-mode) .navbar-custom {
+  background-color: #EBEBEB;
+}
+
+body:not(.dark-mode) .nav-link {
+  color: #000000;
+}
+
+body:not(.dark-mode) .btn {
+  background-color: #772953;
+  color: #FFFFFF;
+  border-color: #772953;
+}
+
+body:not(.dark-mode) .btn:hover {
+  background-color: #E95420;
+  border-color: #E95420;
+}
+
+body:not(.dark-mode) .app {
+  background-color: #EBEBEB;
+}
+
+body:not(.dark-mode) .quiz h2 {
+  color: #000000;
+}
+
+body:not(.dark-mode) .card {
+  background-color: #EBEBEB;
+  color: #000000;
+}
+
+body:not(.dark-mode) .pagination-container {
+  background-color: #EBEBEB;
+}
+
+body:not(.dark-mode) .container{
+  background-color: #FFFFFF;
+  border-color: #EBEBEB;
+  color: #000000;
+}
+
+body:not(.dark-mode) #terms-container {
+  background-color: #EBEBEB;
+  color: #000000;
+}
+
+body:not(.dark-mode) .navbar-custom {
+  background-color: #EBEBEB;
+}
+
+body:not(.dark-mode) .navbar-custom .nav-link {
+  color: #000000;
+}
+
+body:not(.dark-mode) footer {
+  background-color: #EBEBEB;
+  color: #000000;
+}
+
+/* Right-align dark mode button */
+.navbar-nav.ml-auto {
+  margin-left: auto;
+  margin-right: 20px;
 }
