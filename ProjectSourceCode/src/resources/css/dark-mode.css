@@ -12,17 +12,6 @@ body.dark-mode {
   color: #FFFFFF;
 }
 
-.dark-mode .btn {
-  background-color: #C34C23;
-  color: #FFFFFF;
-  border-color: #C34C23;
-}
-
-.dark-mode .btn:hover {
-  background-color: #650A53;
-  border-color: #650A53;
-}
-
 .dark-mode .app {
   background-color: #2B2B2B;
 }
@@ -87,6 +76,11 @@ dark-mode .notecard-front,
   color: #FFFFFF;
 }
 
+.dark-mode #dark-mode-toggle{
+  background-color: #2B2B2B;
+  color: #FFFFFF;
+}
+
 .dark-mode #msg1,
 .dark-mode #msg2 {
   color: #FFFFFF;
@@ -113,17 +107,6 @@ body:not(.dark-mode) .navbar-custom {
 
 body:not(.dark-mode) .nav-link {
   color: #000000;
-}
-
-body:not(.dark-mode) .btn {
-  background-color: #772953;
-  color: #FFFFFF;
-  border-color: #772953;
-}
-
-body:not(.dark-mode) .btn:hover {
-  background-color: #E95420;
-  border-color: #E95420;
 }
 
 body:not(.dark-mode) .app {
