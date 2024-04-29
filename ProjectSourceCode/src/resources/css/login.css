@@ -1,0 +1,9 @@
+/* Additional CSS for full page image */
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('/ProjectSourceCode/Pictures/LearnMastersLogo.png');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}

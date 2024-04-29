@@ -1,17 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Login</title>
+   <!-- Bootstrap CSS -->
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+   <style>
+       /* Additional CSS for error message */
+       .error-message {
+           color: red;
+           margin-top: 10px;
+       }
+   </style>
+</head>
+<body>
+
+
 <form action="/login" method="POST">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h1>Log In</h1>
-            <label for="username">Username:</label><br>
-            <input type="text" id="username" name="username" class="form-control"><br>
-            <label for="password">Password:</label><br>
-            <input type="password" id="password" name="password" class="form-control"><br><br>
-            <input type="submit" value="Login" class="btn btn-primary btn-block">
-            <p class="mt-3 text-center">Not registered yet? <a href="/register">Register here</a>.</p>
-            <!-- Add message for accessing home -->
-            <p class="mt-3 text-center text-danger">You need to log in to access the home page.</p>
-        </div>
-    </div>
+   <div class="row justify-content-center">
+       <div class="col-md-6">
+           <h1>Log In</h1>
+           <label for="username">Username:</label><br>
+           <input type="text" id="username" name="username" class="form-control"><br>
+           <label for="password">Password:</label><br>
+           <input type="text" id="password" name="password" class="form-control"><br><br>
+           <input type="submit" value="Login" class="btn btn-primary btn-block">
+           <p class="mt-3 text-center">Not registered yet? <a href="/register">Register here</a>.</p>
+       </div>
+   </div>
 </form>
 
+
+<!-- Error message for login -->
+<p class="error-message" id="login-error-message"></p>
+
+
 {{> message}}
+
+
+<script>
+   // Function to prevent access to home page if not logged in
+   function preventAccessToHome() {
+       document.getElementById('login-error-message').innerText = 'Please log in to access the home page.';
+   }
+
+
+   // Function to display message for logout
+   function displayLogoutMessage() {
+       document.getElementById('login-error-message').innerText = 'Please log in CANNOT LOGOUT';
+   }
+
+
+   document.addEventListener('DOMContentLoaded', function () {
+       // Intercept clicks on the home link
+       const homeLink = document.querySelector('a[href="/home"]');
+       if (homeLink) {
+           homeLink.addEventListener('click', function (event) {
+               event.preventDefault();
+               preventAccessToHome();
+           });
+       }
+
+
+       // Intercept clicks on the logout link
+       const logoutLink = document.querySelector('a[href="/logout"]');
+       if (logoutLink) {
+           logoutLink.addEventListener('click', function (event) {
+               event.preventDefault();
+               displayLogoutMessage();
+           });
+       }
+   });
+</script>
+
+
+</body>
+</html>
