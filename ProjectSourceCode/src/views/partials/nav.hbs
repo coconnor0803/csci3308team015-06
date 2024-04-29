@@ -1,4 +1,15 @@
 <header>
+  <style>
+    a:hover{
+      background-color: #ddd;
+      color: white;
+    }
+
+    a:active{
+      background-color: #04AA6D;
+      color: white;
+    }
+  </style>
   <nav class="navbar navbar-expand-lg navbar-custom">
     <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
       <ul class="navbar-nav mr-auto">
@@ -8,9 +19,6 @@
         <li class="nav-item">
           <a class="nav-link" href="/login">Login</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Log out</a>
-        </li>
       </ul>
     </div>
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
@@ -19,6 +27,9 @@
           <button id="dark-mode-toggle" class="btn">
             <i class="fas fa-moon"></i>
           </button>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Log out</a>
         </li>
       </ul>
     </div>
