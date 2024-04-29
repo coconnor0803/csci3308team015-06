@@ -31,22 +31,24 @@
     #terms-list li {
         margin-bottom: 10px;
     }
-    button{
-        background-color:rgb(0, 136, 255);
-        color:white;
-        border-radius:12px;
+    button {
+        background-color: rgb(0, 136, 255);
+        color: white;
+        border-radius: 12px;
         border: rgb(0, 136, 255);
-        padding:6px 20px;
+        padding: 10px 25px; /* Added more padding */
+        margin-bottom: 20px; /* Added more bottom margin */
     }
-    input{
+    input {
         width: 30%;
-        border-radius:3px;
+        border-radius: 3px;
     }
     textarea {
         width: 100%;
-        border-radius:6px;
+        border-radius: 6px;
     }
 </style>
+
 </head>
 <body>
 <div class="container">
@@ -71,14 +73,6 @@
         <button type="button" onclick="addTerm()">Add Term</button>
         <button type="submit">Create Set</button>
     </form>
-</div>
-
-<div class="container">
-    <h2>Upload Terms</h2>
-    <input type="file" id="file-input" accept=".txt">
-    <button onclick="uploadFile()">Upload</button>
-    <ul id="terms-list"></ul>
-    <input type="hidden" id="uploaded-terms" name="uploadedTerms">
 </div>
 
 <script>
