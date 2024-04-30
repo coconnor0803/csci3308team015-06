@@ -150,10 +150,6 @@ app.get('/fetchQuestions', async (req, res) => {
 
 app.use(express.static('public'));
 
-
-
-
-
 app.get('/', (req, res) => {
     res.redirect('/login');
 });
@@ -167,10 +163,10 @@ app.get('/quiz', (req, res) => {
   res.render('pages/quiz');
 });
 
-
 app.get('/register', (req, res) => {
   res.render('pages/register');
 });
+
 app.get('/create', (req, res) => {
   // Render the create page (assuming you have a create.hbs file in your views directory)
   res.render('pages/create'); // Assuming you're using Handlebars as your template engine
@@ -181,6 +177,10 @@ app.get('/study', (req, res) => {
 });
 
 app.post('/register', async (req, res) => {
+  if (req.body.username.length > 50) {
+    return res.status(400).send({ message: 'Invalid input' });
+  }
+
   try{
     //hash the password using bcrypt library
     const hash = await bcrypt.hash(req.body.password, 10);
@@ -190,10 +190,20 @@ app.post('/register', async (req, res) => {
     
     await db.none(insert, values);
 
+    //uncomment when testing
+    //res.status(200).send({ message: 'Success' });
+
+    //comment this line below when testing
     res.redirect('/login');
   } catch (error) {
     console.error('Error during registration:', error);
-    res.redirect('/register');  }    
+
+    //uncomment when testing
+    //res.status(400).send({ message: 'An error occurred during registration' });
+
+    //comment this line below before testing
+    res.redirect('/register');  
+  }    
 });
 
 app.post('/create', async (req, res) => {
@@ -230,6 +240,8 @@ app.post('/create', async (req, res) => {
   }
 });
 
+
+
 app.post('/add-term/:studySetId', async (req, res) => {
   try {
     // Extract term and definition from the request body
@@ -252,9 +264,6 @@ app.post('/add-term/:studySetId', async (req, res) => {
   }
 });
 
-
-
-
 app.get('/login', (req, res) => {
   res.render('pages/login');
 });
@@ -276,7 +285,12 @@ app.post('/login', async (req, res) => {
       res.redirect('/home');
   } catch (error) {
       console.error('Error during login:', error);
-      res.render('pages/login', { error: 'An error occurred. Please try again.' });
+
+      //Uncomment this line below before testing
+      res.status(400).send({ message: 'An error occurred during registration' });
+
+      // Comment this line below before testing
+      //res.render('pages/login', { error: 'An error occurred. Please try again.' });
   }
 });
 
@@ -398,7 +412,8 @@ const auth = (req, res, next) => {
 //to
 app.use(auth);
 
-app.listen(3000);
+//app.listen(3000);
+module.exports = app.listen(3000);
 
 console.log('Server is listening on port 3000');
 
